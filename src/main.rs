@@ -1,10 +1,67 @@
 fn main() {
     //day_1();
-    day_2();
+    //day_2();
+    day_3();
 }
 
 fn read_input(day: i32) -> String {
     std::fs::read_to_string(format!("input{day}.txt")).expect("couldn't read input file")
+}
+
+fn day_3() {
+    let input = read_input(3);
+    let lines: Vec<&str> = input.lines().collect();
+
+    let mut score = 0;
+
+    // part 1
+    // for line in lines {
+    //     let first = &line[..(line.len() / 2)];
+    //     let last = &line[(line.len() / 2)..];
+
+    //     let mut ch: char = ' ';
+    //     for c1 in first.chars() {
+    //         for c2 in last.chars() {
+    //             if c1 == c2 {
+    //                 ch = c1;
+    //                 break;
+    //             }
+    //         }
+    //         if ch != ' ' {
+    //             break;
+    //         }
+    //     }
+
+    //     if ch.is_uppercase() {
+    //         score += (ch as i32) - ('A' as i32) + 27;
+    //     }
+
+    //     if ch.is_lowercase() {
+    //         score += (ch as i32) - ('a' as i32) + 1; 
+    //     }
+    // }
+
+    for i in 0..lines.len() {
+        if i % 3 != 0 {
+            continue;
+        }
+
+        for ch in lines[i].chars() {
+            if lines[i + 1].contains(ch) && lines[i + 2].contains(ch) {
+                if ch.is_uppercase() {
+                    score += (ch as i32) - ('A' as i32) + 27;
+                }
+
+                if ch.is_lowercase() {
+                    score += (ch as i32) - ('a' as i32) + 1; 
+                }
+
+                break;
+            }
+        }
+    }
+
+    println!("{}", score);
 }
 
 fn day_2() {
