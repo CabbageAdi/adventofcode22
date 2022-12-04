@@ -1,40 +1,11 @@
 fn main() {
     //day_1();
     //day_2();
-    //day_3();
-    day_4();
+    day_3();
 }
 
 fn read_input(day: i32) -> String {
     std::fs::read_to_string(format!("input{day}.txt")).expect("couldn't read input file")
-}
-
-fn day_4() {
-    let input = read_input(4);
-    let lines: Vec<&str> = input.lines().collect();
-
-    let mut overlaps = 0;
-    for line in lines {
-        let ranges: Vec<&str> = line.split(",").collect();
-        let r1: Vec<&str> = ranges[0].split("-").collect();
-        let l1 = r1[0].parse::<i32>().unwrap();
-        let u1 = r1[1].parse::<i32>().unwrap();
-
-        let r2: Vec<&str> = ranges[1].split("-").collect();
-        let l2 = r2[0].parse::<i32>().unwrap();
-        let u2 = r2[1].parse::<i32>().unwrap();
-
-        // part 1
-        // if l1 <= l2 && u1 >= u2 || l1 >= l2 && u1 <= u2 {
-        //     overlaps += 1;
-        // }
-        
-        if l1 <= u2 && u1 >= u2 || l2 <= u1 && u2 >= u1 {
-            overlaps += 1;
-        }
-    }
-
-    println!("{}", overlaps);
 }
 
 fn day_3() {
@@ -43,7 +14,6 @@ fn day_3() {
 
     let mut score = 0;
 
-    // part 1
     // for line in lines {
     //     let first = &line[..(line.len() / 2)];
     //     let last = &line[(line.len() / 2)..];
