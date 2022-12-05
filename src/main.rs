@@ -1,12 +1,64 @@
+use std::collections::HashMap;
+
 fn main() {
     //day_1();
     //day_2();
     //day_3();
-    day_4();
+    //day_4();
+    day_5();
 }
 
 fn read_input(day: i32) -> String {
     std::fs::read_to_string(format!("input{day}.txt")).expect("couldn't read input file")
+}
+
+fn day_5() {
+    let input = read_input(5);
+    let lines: Vec<&str> = input.lines().collect();
+
+    let mut crates: HashMap<usize, Vec<char>> = HashMap::new();
+    for i in (0..8).rev().collect::<Vec<usize>>() {
+        let line = lines[i];
+        for j in 0..9 {
+            if !crates.contains_key(&j) {
+                crates.insert(j, vec![]);
+            }
+            let index = 1 + j * 4;
+            if line.as_bytes()[index] as char != ' ' {
+                crates.get_mut(&j).unwrap().push(line.as_bytes()[index] as char);
+            }
+        }
+    }
+
+    for line in &lines[10..lines.len()] {
+         let count_index = line.find(|c| char::is_digit(c, 10)).unwrap();
+         let count_end_index = line[count_index..line.len()].find(char::is_whitespace).unwrap() + count_index;
+         let count = &line[count_index..count_end_index].parse::<usize>().unwrap();
+
+         let from_index = line[count_end_index..line.len()].find(|c| char::is_digit(c, 10)).unwrap() + count_end_index;
+         let from = &line[from_index..from_index + 1].parse::<usize>().unwrap();
+
+         let to_index = line[from_index + 1..line.len()].find(|c| char::is_digit(c, 10)).unwrap() + from_index + 1;
+         let to = &line[to_index..to_index + 1].parse::<usize>().unwrap();
+
+         //part 1
+         //for _ in 0..*count {
+         //     let ch = crates.get_mut(&(from - 1)).unwrap().pop().unwrap();
+         //     crates.get_mut(&(to - 1)).unwrap().push(ch);
+         // }
+         let vec = crates.get_mut(&(from - 1)).unwrap();
+         let len = vec.len();
+         for _ in 0..*count {
+             let vec = crates.get_mut(&(from - 1)).unwrap();
+             let ch = vec.remove(len - count);
+             crates.get_mut(&(to - 1)).unwrap().push(ch);
+         }
+    }
+
+    for i in 0..crates.len() {
+        print!("{}", crates.get(&i).unwrap()[crates.get(&i).unwrap().len() - 1]);
+    }
+    println!();
 }
 
 fn day_4() {
