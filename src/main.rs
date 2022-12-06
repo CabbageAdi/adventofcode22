@@ -5,11 +5,41 @@ fn main() {
     //day_2();
     //day_3();
     //day_4();
-    day_5();
+    //day_5();
+    day_6();
 }
 
 fn read_input(day: i32) -> String {
     std::fs::read_to_string(format!("input{day}.txt")).expect("couldn't read input file")
+}
+
+fn day_6() {
+    let input = read_input(6);
+
+    // part 1
+    const MESSAGE_COUNT: usize = 14;
+
+    let mut last = [' '; MESSAGE_COUNT];
+    let ch = input.as_bytes().iter().map(|b| *b as char).collect::<Vec<char>>();
+    for i in 0..input.len() {
+        if i < MESSAGE_COUNT {
+            last[i] = ch[i];
+            continue;
+        }
+        let mut contains: bool = false;
+        for i in 0..last.len() {
+            for j in 0..last.len() {
+                if last[i] == last[j] && i != j {
+                    contains = true;
+                }
+            }
+        }
+        if !contains {
+            println!("{}", i);
+            return;
+        }
+        last[i % MESSAGE_COUNT] = ch[i];
+    }
 }
 
 fn day_5() {
