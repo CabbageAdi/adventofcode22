@@ -6,11 +6,45 @@ fn main() {
     //day_3();
     //day_4();
     //day_5();
-    day_6();
+    //day_6();
+    day_7();
 }
 
 fn read_input(day: i32) -> String {
     std::fs::read_to_string(format!("input{day}.txt")).expect("couldn't read input file")
+}
+
+fn day_7() {
+    let input = read_input(7);
+    let lines: Vec<&str> = input.lines().collect();
+
+    let mut current: Vec<i32> = vec![];
+    let mut done: Vec<i32> = vec![];
+
+    for line in lines {
+        if line.starts_with("$ cd") {
+            if line.contains("..") {
+                done.push(current.pop().unwrap());
+            }
+            else {
+                current.push(0);
+            }
+        }
+        else if !line.starts_with("$ ls") && !line.starts_with("dir") {
+            let num = line[0..line.find(char::is_whitespace).unwrap()].parse::<i32>().unwrap();
+            for i in &mut current {
+                *i += num;
+            }
+        }
+    }
+    done.extend(&current);
+    //part 1
+    //println!("{}", done.iter().filter(|n| **n <= 100000).sum::<i32>());
+
+    let max = done.iter().max().unwrap();
+    let unused = 70000000 - max;
+    let required = 30000000 - unused;
+    println!("{}", done.iter().filter(|n| **n >= required).min().unwrap());
 }
 
 fn day_6() {
