@@ -7,11 +7,121 @@ fn main() {
     //day_4();
     //day_5();
     //day_6();
-    day_7();
+    //day_7();
+    day_8();
 }
 
 fn read_input(day: i32) -> String {
     std::fs::read_to_string(format!("input{day}.txt")).expect("couldn't read input file")
+}
+
+fn day_8() {
+    let input = read_input(8);
+    let lines: Vec<&str> = input.lines().collect();
+
+    let mut grid: Vec<Vec<i32>> = vec![];
+    for line in lines {
+        let row = line.chars().map(|c| c.to_string().parse::<i32>().unwrap()).collect::<Vec<i32>>();
+        grid.push(row);
+    }
+    let mut count = 0;
+    // part 1 
+    // for k in 0..grid.len() {
+    //     let row = &grid[k];
+    //     for i in 0..row.len() {
+    //         let mut visible = true;
+    //         let num = row[i];
+
+    //         //horizontal
+    //         for j in 0..i {
+    //             if row[j] >= num {
+    //                 visible = false;
+    //             } 
+    //         }
+    //         if !visible {
+    //             visible = true;
+    //             for j in i + 1..row.len() {
+    //                 if row[j] >= num {
+    //                     visible = false;
+    //                 }
+    //             }
+    //         }
+
+    //         // vertical
+    //         if !visible {
+    //             visible = true;
+    //             for j in 0..k {
+    //                 if grid[j][i] >= num {
+    //                     visible = false;
+    //                 }
+    //             }
+    //         }
+    //         if !visible {
+    //             visible = true;
+    //             for j in k + 1..grid.len() {
+    //                 if grid[j][i] >= num {
+    //                     visible = false;
+    //                 }
+    //             }
+    //         }
+    //         if visible {
+    //             count += 1;
+    //         }
+    //     }
+    // }
+    let mut top = 0;
+    for k in 0..grid.len() {
+        let row = &grid[k];
+        for i in 0..row.len() {
+            let mut score = 1;
+            let num = row[i];
+
+            //horizontal
+            for j in (0..i).rev() {
+                if row[j] >= num {
+                    score *= i - j;
+                    break;
+                } 
+                if j == 0 {
+                score *= i;
+                }
+            }
+            for j in i + 1..row.len() {
+                if row[j] >= num {
+                    score *= j - i;
+                    break;
+                }
+                if j == row.len() - 1 {
+                score *= row.len() - i - 1;
+                }
+            }
+
+            // vertical
+            for j in (0..k).rev() {
+                if grid[j][i] >= num {
+                    score *= k - j;
+                    break;
+                }
+                if j == 0 {
+                score *= k;
+                }
+            }
+            for j in k + 1..grid.len() {
+                if grid[j][i] >= num {
+                    score *= j - k;
+                    break;
+                }
+                if j == grid.len() - 1 {
+                score *= grid.len() - k - 1;
+                }
+            }
+
+            if score > top {
+                top = score;
+            }
+        }
+    }
+    println!("{}", top);
 }
 
 fn day_7() {
