@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 use std::collections::HashMap;
 
 fn main() {
@@ -8,11 +10,77 @@ fn main() {
     //day_5();
     //day_6();
     //day_7();
-    day_8();
+    //day_8();
+    day_9();
 }
 
 fn read_input(day: i32) -> String {
     std::fs::read_to_string(format!("input{day}.txt")).expect("couldn't read input file")
+}
+
+fn day_9() {
+    let input = read_input(9);
+    let lines: Vec<&str> = input.lines().collect();
+    
+    // part 1
+    // let mut pos_h: (i32, i32) = (0, 0);
+    // let mut pos_t: (i32, i32) = (0, 0);
+    // let mut visited = vec![pos_t];
+    // 
+    // for line in lines {
+    //     let count = line[2..line.len()].to_string().parse::<i32>().unwrap();
+    //     let direction = match &line[0..1] {
+    //         "L" => (-1, 0),
+    //         "R" => (1, 0),
+    //         "D" => (0, -1),
+    //         "U" => (0, 1),
+    //         c => panic!("invalid char {}", c),
+    //     };
+    //     for _ in 0..count {
+    //         pos_h.0 += direction.0;
+    //         pos_h.1 += direction.1;
+    //         if (pos_h.0 - pos_t.0).abs() > 1 || (pos_h.1 - pos_t.1).abs() > 1 {
+    //             pos_t.0 += (pos_h.0 - pos_t.0).clamp(-1, 1);
+    //             pos_t.1 += (pos_h.1 - pos_t.1).clamp(-1, 1);
+    //             if !visited.contains(&pos_t){
+    //                 visited.push(pos_t);
+    //             }
+    //         }
+    //     }
+    // }
+
+    let mut pos_k = [(0i32, 0i32); 10]; 
+    let mut visited = vec![(0, 0)];
+
+    for line in lines {
+        let count = line[2..line.len()].to_string().parse::<i32>().unwrap();
+        let direction = match &line[0..1] {
+            "L" => (-1, 0),
+            "R" => (1, 0),
+            "D" => (0, -1),
+            "U" => (0, 1),
+            c => panic!("invalid char {}", c),
+        };
+        for _ in 0..count {
+            // move head
+            pos_k[0].0 += direction.0;
+            pos_k[0].1 += direction.1;
+            for i in 1..pos_k.len() {
+                let pos_h = pos_k[i - 1];
+                let pos_t = &mut pos_k[i];
+                if (pos_h.0 - pos_t.0).abs() > 1 || (pos_h.1 - pos_t.1).abs() > 1 {
+                    pos_t.0 += (pos_h.0 - pos_t.0).clamp(-1, 1);
+                    pos_t.1 += (pos_h.1 - pos_t.1).clamp(-1, 1);
+                }
+            }
+
+            if !visited.contains(&pos_k[pos_k.len() - 1]){
+                visited.push(pos_k[pos_k.len() - 1]);
+            }
+        }
+    }
+
+    print!("{}", visited.len());
 }
 
 fn day_8() {
